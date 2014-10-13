@@ -6,9 +6,67 @@ description = 'Wrapper for slf4j Logger that uses format strings'
 group       = 'net.swisstech'
 version     = '1.0.0'
 
+// normal repositories and dependencies
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.slf4j:slf4j-api:1.7.7'
+}
+
+// testing
+test.useTestNG()
+
+// generate the logger class by calling the python generator script
+task generateLogger(type: Exec) {
+
+	// compileJava depends on 'this' task
+	tasks.compileJava.dependsOn name
+
+	// where to put the generated sources
+	ext.destinationDir = "${buildDir}/generated-sources/generate-logger"
+
+	// configure task to generate the logger code
+	commandLine = [ 'python', 'src/main/python/generate_logger.py', ext.destinationDir ]
+
+	// only regenerate when the source file has changed
+	inputs.dir( new File("${buildDir}/../src/main/python"))
+	outputs.dir(new File("${ext.destinationDir}"))
+}
+
+// make sure the generated code is available to the compiler
+sourceSets.main.java.srcDirs += generateLogger.destinationDir
+
+// TODO use eclipse-enhancer once it is published
+eclipseProject.doLast {
+	sourceSets*.java.srcDirs*.each      { it.mkdirs() }
+	sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+// END TODO
+
 // task to generate wrapper
 task wrapper(type: Wrapper) {
 	gradleVersion = '2.1'
+}
+
+// source-code jar
+task sourceJar(type: Jar) {
+	from sourceSets.main.allJava
+}
+
+// bintray uses the publication, also includes source jar
+apply plugin: 'maven-publish'
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+			artifact sourceJar {
+				classifier 'sources'
+			}
+		}
+	}
 }
 
 // uploading to jcenter
@@ -43,7 +101,7 @@ bintray {
 		repo            = 'maven'
 		name            = "${project.group}_${project.name}"
 		desc            = project.description
-		licenses        = ["Apache-2.0"]
+		licenses        = [ 'Apache-2.0' ]
 		websiteUrl      = 'https://github.com/stackmagic/logger'
 		vcsUrl          = 'https://github.com/stackmagic/logger.git'
 		issueTrackerUrl = 'https://github.com/stackmagic/logger/issues'
@@ -52,58 +110,3 @@ bintray {
 		}
 	}
 }
-
-// source-code jar
-task sourceJar(type: Jar) {
-	from sourceSets.main.allJava
-}
-
-// bintray uses the publication, also includes source jar
-apply plugin: 'maven-publish'
-publishing {
-	publications {
-		mavenJava(MavenPublication) {
-			from components.java
-			artifact sourceJar {
-				classifier 'sources'
-			}
-		}
-	}
-}
-
-// normal repositories and dependencies
-repositories {
-	mavenLocal()
-	mavenCentral()
-}
-
-dependencies {
-	compile 'org.slf4j:slf4j-api:1.7.7'
-}
-
-// generate the logger class by calling the python generator script
-task generateLogger(type: Exec) {
-
-	// compileJava depends on 'this' task
-	tasks.compileJava.dependsOn name
-
-	// where to put the generated sources
-	ext.destinationDir = "${buildDir}/generated-sources/generate-logger"
-
-	// configure task to generate the logger code
-	commandLine = [ 'python', 'src/main/python/generate_logger.py', ext.destinationDir ]
-
-	// only regenerate when the source file has changed
-	inputs.dir( new File("${buildDir}/../src/main/python"))
-	outputs.dir(new File("${ext.destinationDir}"))
-}
-
-// make sure the generated code is available to the compiler
-sourceSets.main.java.srcDirs += generateLogger.destinationDir
-
-// TODO use eclipse-enhancer once it is published
-eclipseProject.doLast {
-	sourceSets*.java.srcDirs*.each      { it.mkdirs() }
-	sourceSets*.resources.srcDirs*.each { it.mkdirs() }
-}
-// END TODO
