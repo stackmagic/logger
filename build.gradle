@@ -24,8 +24,8 @@ apply plugin: 'com.jfrog.bintray'
 
 bintray {
 	// key and user must be in your ~/.gradle/gradle.properties
-	key          = swisstech_bintray_apikey
-	user         = swisstech_bintray_user
+	key          = getProperty('swisstech_bintray_apikey')
+	user         = getProperty('swisstech_bintray_user')
 	dryRun       = false
 	publish      = true
 	publications = [ 'mavenJava' ]
@@ -97,3 +97,13 @@ eclipseProject.doLast {
 	sourceSets*.resources.srcDirs*.each { it.mkdirs() }
 }
 // END TODO
+
+def getProperty = { String name ->
+	try {
+		return project[name]
+	}
+	catch (MissingPropertyException e) {
+		println "!!! property ${name} is not available"
+		return null
+	}
+}
