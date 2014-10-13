@@ -39,6 +39,12 @@ bintray {
 	}
 }
 
+task sourceJar(type: Jar, dependsOn: classes) {
+	tasks.assemble.dependsOn name
+	classifier = 'sources'
+	from sourceSets.main.allSource
+}
+
 apply plugin: 'maven-publish'
 publishing {
 	publications {
