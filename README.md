@@ -6,7 +6,7 @@ pre-coded by hand, the Logger itself generated with a python script that
 generates methods for up to 20 method arguments.
 
 <img src="https://travis-ci.org/stackmagic/logger.svg?branch=master" />
-[ ![Download](https://api.bintray.com/packages/stackmagic/maven/net.swisstech%3Alogger/images/download.svg) ](https://bintray.com/stackmagic/maven/net.swisstech%3Alogger/_latestVersion)
+[ ![Download](https://api.bintray.com/packages/stackmagic/maven/net.swisstech_logger/images/download.svg) ](https://bintray.com/stackmagic/maven/net.swisstech_logger/_latestVersion)
 
 downloading
 ===========
