@@ -2,8 +2,9 @@
 apply plugin: 'java'
 apply plugin: 'eclipse'
 
-group   = 'net.swisstech'
-version = '1.0.0'
+description = 'Wrapper for slf4j Logger that uses format strings'
+group       = 'net.swisstech'
+version     = '1.0.0'
 
 // task to generate wrapper
 task wrapper(type: Wrapper) {
@@ -29,10 +30,13 @@ bintray {
 	publish      = true
 	publications = [ 'mavenJava' ]
 	pkg {
-		repo       = 'maven'
-		name       = "${project.group}:${project.name}"
-		websiteUrl = "https://github.com/stackmagic/logger"
-		licenses   = ["Apache-2.0"]
+		repo            = 'maven'
+		name            = "${project.group}:${project.name}"
+		desc            = project.description
+		licenses        = ["Apache-2.0"]
+		websiteUrl      = 'https://github.com/stackmagic/logger'
+		vcsUrl          = 'https://github.com/stackmagic/logger.git'
+		issueTrackerUrl = 'https://github.com/stackmagic/logger/issues'
 		version {
 			name = project.version
 		}
