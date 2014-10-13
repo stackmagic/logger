@@ -25,8 +25,13 @@ public class YourClass {
     private static final Logger LOG = LoggerFactory.getLogger(YourClass.class);
 
     public void yourMethod(String name, int num) {
+
+        // simple log
         LOG.info("Hello, %s!", name)
-        LOG.error("Oops %s caused %5d errors!", new Exception("testing"));
+
+        // exception/throwable is always the last argument
+        // and NOT part of the format string
+        LOG.error("Oops %s caused %5d errors!", name, num, new Exception("testing"));
     }
 }
 ```
