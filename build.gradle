@@ -10,6 +10,35 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '2.1'
 }
 
+repositories {
+	mavenLocal()
+	mavenCentral()
+}
+
+dependencies {
+	compile 'org.slf4j:slf4j-api:1.7.7'
+}
+
+// generate the logger class by calling the python generator script
+task generateLogger(type: Exec) {
+
+	// compileJava depends on 'this' task
+	tasks.compileJava.dependsOn name
+
+	// where to put the generated sources
+	ext.destinationDir = "${buildDir}/generated-sources/generate-logger"
+
+	// configure task to generate the logger code
+	commandLine = [ 'python', 'src/main/python/generate_logger.py', ext.destinationDir ]
+
+	// only regenerate when the source file has changed
+	inputs.dir( new File("${buildDir}/../src/main/python"))
+	outputs.dir(new File("${ext.destinationDir}"))
+}
+
+// make sure the generated code is available to the compiler
+sourceSets.main.java.srcDirs += generateLogger.destinationDir
+
 // TODO use eclipse-enhancer one it is published
 eclipseProject.doLast {
 	sourceSets*.java.srcDirs*.each      { it.mkdirs() }
