@@ -10,6 +10,45 @@ task wrapper(type: Wrapper) {
 	gradleVersion = '2.1'
 }
 
+// uploading to jcenter
+buildscript {
+	repositories {
+		jcenter()
+	}
+	dependencies {
+		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
+	}
+}
+apply plugin: 'com.jfrog.bintray'
+
+bintray {
+	// key and user must be in your ~/.gradle/gradle.properties
+	key          = swisstech_bintray_apikey
+	user         = swisstech_bintray_user
+	dryRun       = false
+	publish      = true
+	publications = [ 'mavenJava' ]
+	pkg {
+		repo       = 'maven'
+		name       = "${project.group}:${project.name}"
+		websiteUrl = "https://github.com/stackmagic/logger"
+		licenses   = ["Apache-2.0"]
+		version {
+			name = project.version
+		}
+	}
+}
+
+apply plugin: 'maven-publish'
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from components.java
+		}
+	}
+}
+
+// normal repositories and dependencies
 repositories {
 	mavenLocal()
 	mavenCentral()
