@@ -5,6 +5,8 @@ Wrapper for slf4j Logger that uses format strings. The LoggerFactory is
 pre-coded by hand, the Logger itself generated with a python script that
 generates methods for up to 20 method arguments.
 
+<img src="https://travis-ci.org/stackmagic/logger.svg?branch=master" />
+
 maven
 =====
 
