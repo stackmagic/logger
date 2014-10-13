@@ -39,17 +39,20 @@ bintray {
 	}
 }
 
-task sourceJar(type: Jar, dependsOn: classes) {
-	tasks.assemble.dependsOn name
-	classifier = 'sources'
-	from sourceSets.main.allSource
+// source-code jar
+task sourceJar(type: Jar) {
+	from sourceSets.main.allJava
 }
 
+// bintray uses the publication, also includes source jar
 apply plugin: 'maven-publish'
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
 			from components.java
+			artifact sourceJar {
+				classifier 'sources'
+			}
 		}
 	}
 }
