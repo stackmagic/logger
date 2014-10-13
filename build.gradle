@@ -20,8 +20,18 @@ buildscript {
 		classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:0.5'
 	}
 }
-apply plugin: 'com.jfrog.bintray'
 
+def getProperty = { String name ->
+	try {
+		return project[name]
+	}
+	catch (MissingPropertyException e) {
+		println "!!! property ${name} is not available"
+		return ""
+	}
+}
+
+apply plugin: 'com.jfrog.bintray'
 bintray {
 	// key and user must be in your ~/.gradle/gradle.properties
 	key          = getProperty('swisstech_bintray_apikey')
@@ -97,13 +107,3 @@ eclipseProject.doLast {
 	sourceSets*.resources.srcDirs*.each { it.mkdirs() }
 }
 // END TODO
-
-def getProperty = { String name ->
-	try {
-		return project[name]
-	}
-	catch (MissingPropertyException e) {
-		println "!!! property ${name} is not available"
-		return null
-	}
-}
