@@ -6,6 +6,9 @@ description = 'Wrapper for slf4j Logger that uses format strings'
 group       = 'net.swisstech'
 version     = '1.0.0'
 
+sourceCompatibility = 1.6
+targetCompatibility = 1.6
+
 // normal repositories and dependencies
 repositories {
 	mavenLocal()
