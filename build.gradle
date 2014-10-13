@@ -101,7 +101,7 @@ task generateLogger(type: Exec) {
 // make sure the generated code is available to the compiler
 sourceSets.main.java.srcDirs += generateLogger.destinationDir
 
-// TODO use eclipse-enhancer one it is published
+// TODO use eclipse-enhancer once it is published
 eclipseProject.doLast {
 	sourceSets*.java.srcDirs*.each      { it.mkdirs() }
 	sourceSets*.resources.srcDirs*.each { it.mkdirs() }
