@@ -7,10 +7,42 @@ generates methods for up to 20 method arguments.
 
 <img src="https://travis-ci.org/stackmagic/logger.svg?branch=master" />
 
-maven
-=====
+downloading
+===========
 
-this project will be available on bintray/jcenter real soon now (tm).
+gradle
+------
+
+the [jcenter() shortcut requires at least gradle 1.7](http://www.gradle.org/docs/1.7/release-notes#jcenter-repository-support)
+
+```groovy
+//
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'net.swisstech:logger:1.0.0'
+}
+```
+
+maven
+-----
+
+```xml
+<repository>
+    <id>jcenter</id>
+    <url>https://jcenter.bintray.com/</url>
+</repository>
+```
+
+```xml
+<dependency>
+    <groupId>net.swisstech</groupId>
+    <artifactId>logger</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
 usage
 =====
