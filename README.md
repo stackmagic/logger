@@ -17,7 +17,6 @@ gradle
 the [jcenter() shortcut requires at least gradle 1.7](http://www.gradle.org/docs/1.7/release-notes#jcenter-repository-support)
 
 ```groovy
-//
 repositories {
     jcenter()
 }
