@@ -1,0 +1,18 @@
+
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+group   = 'net.swisstech'
+version = '1.0.0'
+
+// task to generate wrapper
+task wrapper(type: Wrapper) {
+	gradleVersion = '2.1'
+}
+
+// TODO use eclipse-enhancer one it is published
+eclipseProject.doLast {
+	sourceSets*.java.srcDirs*.each      { it.mkdirs() }
+	sourceSets*.resources.srcDirs*.each { it.mkdirs() }
+}
+// END TODO
