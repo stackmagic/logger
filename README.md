@@ -22,7 +22,7 @@ repositories {
 }
 
 dependencies {
-    compile 'net.swisstech:logger:1.0.0'
+    compile 'net.swisstech:logger:+'
 }
 ```
 
@@ -40,7 +40,7 @@ maven
 <dependency>
     <groupId>net.swisstech</groupId>
     <artifactId>logger</artifactId>
-    <version>1.0.0</version>
+    <version>...</version>
 </dependency>
 ```
 
