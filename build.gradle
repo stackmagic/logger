@@ -59,7 +59,7 @@ task wrapper(type: Wrapper) {
 
 // source-code jar
 task sourceJar(type: Jar) {
-	from sourceSets.main.allJava
+	from sourceSets.main.allSource
 }
 
 // bintray uses the publication, also includes source jar
@@ -105,7 +105,7 @@ bintray {
 	publications = [ 'mavenJava' ]
 	pkg {
 		repo            = 'maven'
-		name            = "${project.group}_${project.name}"
+		name            = project.name
 		desc            = project.description
 		licenses        = [ 'Apache-2.0' ]
 		websiteUrl      = 'https://github.com/stackmagic/logger'
