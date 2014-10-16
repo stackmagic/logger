@@ -1,4 +1,4 @@
-package net.swisstech.logger;
+package net.swisstech.log;
 
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;

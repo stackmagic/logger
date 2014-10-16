@@ -4,7 +4,7 @@ apply plugin: 'eclipse'
 
 description = 'Wrapper for slf4j Logger that uses format strings'
 group       = 'net.swisstech'
-version     = '1.0.0'
+version     = '1.1.0'
 
 sourceCompatibility = 1.6
 targetCompatibility = 1.6
