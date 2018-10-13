@@ -1,18 +1,16 @@
 
 plugins {
 	id 'java'
-	id 'eclipse'
 	id 'maven-publish'
-	id 'com.jfrog.bintray'             version '1.2'
-	id 'net.swisstech.eclipseenhancer' version '1.0.0'
+	id 'com.jfrog.bintray' version '1.8.4'
 }
 
 description = 'Wrapper for slf4j Logger that uses format strings'
 group       = 'net.swisstech'
-version     = '1.1.0'
+version     = '2.0.0'
 
-sourceCompatibility = 1.6
-targetCompatibility = 1.6
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 // normal repositories and dependencies
 repositories {
@@ -20,15 +18,23 @@ repositories {
 	mavenCentral()
 }
 
-dependencies {
-	compile 'org.slf4j:slf4j-api:1.7.7'
+// project dependencies
+ext.versions = [
+	  slf4j : '1.8.0-beta2'
+	, testNg: '6.8.8'
+]
 
-	testCompile 'org.testng:testng:6.8.8'
-	testCompile 'ch.qos.logback:logback-classic:1.1.2'
+dependencies {
+	compile     "org.slf4j:slf4j-api:${versions.slf4j}"
+
+	testCompile "org.testng:testng:${versions.testNg}"
+	testCompile "org.slf4j:slf4j-simple:${versions.slf4j}"
 }
 
 // testing
-test.useTestNG()
+test {
+	useTestNG()
+}
 
 // generate the logger class by calling the python generator script
 task generateLogger(type: Exec) {
@@ -51,8 +57,8 @@ task generateLogger(type: Exec) {
 sourceSets.main.java.srcDirs += generateLogger.destinationDir
 
 // task to generate wrapper
-task wrapper(type: Wrapper) {
-	gradleVersion = '2.4'
+wrapper {
+	gradleVersion = '4.10'
 }
 
 // source-code jar
@@ -85,8 +91,8 @@ def getProperty = { String name ->
 apply plugin: 'com.jfrog.bintray'
 bintray {
 	// key and user must be in your ~/.gradle/gradle.properties
-	key          = getProperty('swisstech_bintray_apikey')
-	user         = getProperty('swisstech_bintray_user')
+	user         = project.hasProperty('swisstech_bintray_user')   ? project.swisstech_bintray_user   : System.getenv('SWISSTECH_BINTRAY_USER')
+	key          = project.hasProperty('swisstech_bintray_apikey') ? project.swisstech_bintray_apikey : System.getenv('SWISSTECH_BINTRAY_KEY')
 	dryRun       = false
 	publish      = true
 	publications = [ 'mavenJava' ]
