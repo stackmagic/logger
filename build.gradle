@@ -1,7 +1,9 @@
 
 plugins {
 	id 'java'
+	id 'jacoco'
 	id 'maven-publish'
+	id 'project-report'
 	id 'com.jfrog.bintray' version '1.8.4'
 }
 
@@ -12,31 +14,33 @@ version     = '2.0.0'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-// normal repositories and dependencies
+/*
+ * REPOSITORIES
+ */
 repositories {
 	mavenLocal()
 	mavenCentral()
+	jcenter()
 }
 
-// project dependencies
+/*
+ * DEPENDENCIES
+ */
 ext.versions = [
 	  slf4j : '1.8.0-beta2'
-	, testNg: '6.8.8'
+	, testNg: '6.14.3'
 ]
 
 dependencies {
 	compile     "org.slf4j:slf4j-api:${versions.slf4j}"
 
-	testCompile "org.testng:testng:${versions.testNg}"
 	testCompile "org.slf4j:slf4j-simple:${versions.slf4j}"
+	testCompile "org.testng:testng:${versions.testNg}"
 }
 
-// testing
-test {
-	useTestNG()
-}
-
-// generate the logger class by calling the python generator script
+/*
+ * generate the logger class by calling the python generator script
+ */
 task generateLogger(type: Exec) {
 
 	// compileJava depends on 'this' task
@@ -56,17 +60,39 @@ task generateLogger(type: Exec) {
 // make sure the generated code is available to the compiler
 sourceSets.main.java.srcDirs += generateLogger.destinationDir
 
-// task to generate wrapper
+/*
+ * UNIT TESTING
+ */
+jacocoTestReport {
+	reports.html.destination = file("${reportsDir}/jacoco/${name}")
+}
+
+test {
+	useTestNG()
+	testLogging.showStandardStreams = true
+
+	jacoco {
+		destinationFile = file("${buildDir}/jacoco.ut.exec")
+	}
+}
+
+/*
+ * WRAPPER
+ */
 wrapper {
 	gradleVersion = '4.10'
 }
 
-// source-code jar
+/*
+ * PACKAGING
+ */
 task sourceJar(type: Jar) {
 	from sourceSets.main.allSource
 }
 
-// bintray uses the publication, also includes source jar
+/*
+ * PUBLISHING
+ */
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
@@ -78,17 +104,6 @@ publishing {
 	}
 }
 
-def getProperty = { String name ->
-	try {
-		return project[name]
-	}
-	catch (MissingPropertyException e) {
-		println "!!! property ${name} is not available"
-		return ""
-	}
-}
-
-apply plugin: 'com.jfrog.bintray'
 bintray {
 	// key and user must be in your ~/.gradle/gradle.properties
 	user         = project.hasProperty('swisstech_bintray_user')   ? project.swisstech_bintray_user   : System.getenv('SWISSTECH_BINTRAY_USER')
