@@ -92,10 +92,6 @@ with open(fileName, 'w+') as file:
 		for i in range(0, numOfArgs):
 
 			# generate a list of arguments for the method signatures and calls
-
-			# TODO: do this of all permutations of the primitives list?
-			# it'll only generate millions of methods
-
 			arglist = ""
 			calllist = ""
 			for x in range(0, i):
@@ -109,7 +105,11 @@ with open(fileName, 'w+') as file:
 			file.write("	public void %s(String fmt%s, Throwable t) { \n" % (level, arglist))
 			file.write("		if (is%sEnabled()) {\n" % level.title())
 			file.write("			String msg = String.format(fmt%s);\n" % calllist)
-			file.write("			log.%s(msg, t);\n" % level)
+			file.write("			if (t == null) {\n")
+			file.write("				log.%s(msg);\n" % level)
+			file.write("			} else {\n")
+			file.write("				log.%s(msg, t);\n" % level)
+			file.write("			}\n")
 			file.write("		}\n")
 			file.write("	}\n")
 			file.write("\n")
