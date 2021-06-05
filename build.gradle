@@ -9,7 +9,7 @@ plugins {
 
 description = 'Wrapper for slf4j Logger that uses format strings'
 group       = 'net.swisstech'
-version     = '2.0.0'
+version     = '2.0.1'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -27,15 +27,15 @@ repositories {
  * DEPENDENCIES
  */
 ext.versions = [
-	  slf4j : '1.8.0-beta2'
-	, testNg: '6.14.3'
+	     slf4j : '1.8.0-beta4'
+	  , testng : '7.4.0'
 ]
 
 dependencies {
-	compile     "org.slf4j:slf4j-api:${versions.slf4j}"
+	implementation     "org.slf4j:slf4j-api:${versions.slf4j}"
 
-	testCompile "org.slf4j:slf4j-simple:${versions.slf4j}"
-	testCompile "org.testng:testng:${versions.testNg}"
+	testImplementation "org.slf4j:slf4j-simple:${versions.slf4j}"
+	testImplementation "org.testng:testng:${versions.testng}"
 }
 
 /*
@@ -43,7 +43,7 @@ dependencies {
  */
 task generateLogger(type: Exec) {
 
-	// compileJava depends on 'this' task
+	// implementationJava depends on 'this' task
 	tasks.compileJava.dependsOn name
 
 	// where to put the generated sources
@@ -57,30 +57,32 @@ task generateLogger(type: Exec) {
 	outputs.dir(new File("${ext.destinationDir}"))
 }
 
-// make sure the generated code is available to the compiler
+// make sure the generated code is available to the implementationr
 sourceSets.main.java.srcDirs += generateLogger.destinationDir
 
 /*
  * UNIT TESTING
  */
+jacoco {
+	toolVersion = "0.8.6"
+}
+
 jacocoTestReport {
-	reports.html.destination = file("${reportsDir}/jacoco/${name}")
+	reports {
+		xml.enabled true
+	}
 }
 
 test {
 	useTestNG()
 	testLogging.showStandardStreams = true
-
-	jacoco {
-		destinationFile = file("${buildDir}/jacoco.ut.exec")
-	}
 }
 
 /*
  * WRAPPER
  */
 wrapper {
-	gradleVersion = '4.10'
+	gradleVersion = '6.8'
 }
 
 /*
