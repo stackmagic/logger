@@ -1,15 +1,16 @@
 plugins {
 	id 'java'
-	id 'maven'
 	id 'groovy'
 	id 'jacoco'
 	id 'signing'
+	id 'maven-publish'
 	id 'project-report'
+	id('io.github.gradle-nexus.publish-plugin') version '1.1.0'
 }
 
 description = 'Wrapper for slf4j Logger that uses format strings'
 group       = 'net.swisstech'
-version     = '2.0.1'
+version     = '2.0.2-SNAPSHOT'
 
 /*
  * REPOSITORIES
@@ -92,64 +93,54 @@ wrapper {
 /*
  * PACKAGING & PUBLISHING
  */
-task javadocJar(type: Jar) {
-	classifier = 'javadoc'
-	from javadoc
+java {
+	withJavadocJar()
+	withSourcesJar()
 }
 
-task sourcesJar(type: Jar) {
-	classifier = 'sources'
-	from sourceSets.main.allSource
-}
-
-artifacts {
-	archives javadocJar, sourcesJar
-}
-
-signing {
-	sign configurations.archives
-}
-
-uploadArchives {
-	repositories {
-		mavenDeployer {
-			beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
-
-			repository(url: "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/") {
-				authentication(userName: ossrhUsername, password: ossrhPassword)
-			}
-
-			snapshotRepository(url: "https://s01.oss.sonatype.org/content/repositories/snapshots/") {
-				authentication(userName: ossrhUsername, password: ossrhPassword)
-			}
-
-			pom.project {
-				name project.name
-				packaging 'jar'
-				description project.description
-				url "https://github.com/stackmagic/${project.name}"
-
-				scm {
-					connection "scm:git:ssh://git@github.com:stackmagic/${project.name}.git"
-					developerConnection "scm:git:ssh://git@github.com:stackmagic/${project.name}.git"
-					url "https://github.com/stackmagic/${project.name}.git"
-				}
-
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			from(components.java)
+			pom {
+				name = project.name
+				description = project.description
+				url = 'https://github.com/stackmagic/logger'
 				licenses {
 					license {
-						name 'The Apache License, Version 2.0'
-						url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+						name = 'The Apache License, Version 2.0'
+						url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
 					}
 				}
-
 				developers {
 					developer {
-						id 'stackmagic'
-						name 'Patrick Huber'
-						email 'stackmagic@gmail.com'
+						id = 'stackmagic'
+						name = 'Patrick Huber'
+						email = 'stackmagic@gmail.com'
 					}
+				}
+				scm {
+					connection = "scm:git:ssh://git@github.com:stackmagic/${project.name}.git"
+					developerConnection = "scm:git:ssh://git@github.com:stackmagic/${project.name}.git"
+					url = "https://github.com/stackmagic/${project.name}.git"
 				}
 			}
 		}
 	}
+}
+
+nexusPublishing {
+	repositories {
+		sonatype {
+			nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+			snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+			stagingProfileId = project.findProperty('stagingProfileId')
+			username = project.findProperty('sonatypeUsername')
+			password = project.findProperty('sonatypePassword')
+		}
+	}
+}
+
+signing {
+	sign publishing.publications.mavenJava
 }

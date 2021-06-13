@@ -5,8 +5,8 @@ Wrapper for slf4j Logger that uses format strings. The LoggerFactory is
 pre-coded by hand, the Logger itself generated with a python script that
 generates methods for up to 20 method arguments.
 
-[ ![TravicCI](https://travis-ci.org/stackmagic/logger.svg?branch=master) ](https://travis-ci.org/stackmagic/logger)
-[ ![Download](https://api.bintray.com/packages/stackmagic/maven/logger/images/download.svg) ](https://bintray.com/stackmagic/maven/logger/_latestVersion)
+[find it on search.maven.org](https://search.maven.org/search?q=g:net.swisstech%20a:logger)
+[ ![TravicCI](https://travis-ci.com/stackmagic/logger.svg?branch=master) ](https://travis-ci.com/stackmagic/logger)
 
 downloading
 ===========
@@ -14,13 +14,7 @@ downloading
 gradle
 ------
 
-the [jcenter() shortcut requires at least gradle 1.7](http://www.gradle.org/docs/1.7/release-notes#jcenter-repository-support)
-
 ```groovy
-repositories {
-    jcenter()
-}
-
 dependencies {
     compile 'net.swisstech:logger:+'
 }
@@ -28,13 +22,6 @@ dependencies {
 
 maven
 -----
-
-```xml
-<repository>
-    <id>jcenter</id>
-    <url>https://jcenter.bintray.com/</url>
-</repository>
-```
 
 ```xml
 <dependency>
@@ -61,7 +48,7 @@ public class YourClass {
     public void yourMethod(String name, int num) {
 
         // simple log
-        LOG.info("Hello, %s!", name)
+        LOG.info("Hello, %s!", name);
 
         // exception/throwable is always the last argument
         // and NOT part of the format string
@@ -75,3 +62,4 @@ more information
 
 * slf4j: http://www.slf4j.org/
 * java format strings: http://docs.oracle.com/javase/7/docs/api/java/util/Formatter.html#syntax
+
